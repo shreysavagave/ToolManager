@@ -10,7 +10,7 @@ const {
 
 const authMiddleware = require("../../middleware/authMiddleware");
 
-router.get("/", authMiddleware,getPlants);
+router.get("/", getPlants);
 router.post("/",authMiddleware, createPlant);
 router.put("/:id",authMiddleware, updatePlant);
 router.delete("/:id",authMiddleware,  deletePlant);
