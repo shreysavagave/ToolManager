@@ -22,7 +22,7 @@ const cron = require("node-cron");
 app.use(cookieParser());
 
 app.use(cors({
-  origin: process.env.FRONTEND_URL, // Your frontend origin
+  origin:'https://tool-manager-l7rs.vercel.app/', // Your frontend origin
   credentials: true,               // ✅ allow cookies
 }));
 
