@@ -31,8 +31,7 @@ const createPlant = async (req, res) => {
     }
 
     const plant = new Plant({
-      name: name.trim(),
-      createdBy: req.user.id
+      name: name.trim()
     });
 
     await plant.save();
