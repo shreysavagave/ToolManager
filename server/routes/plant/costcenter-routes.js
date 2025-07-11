@@ -9,9 +9,9 @@ const {
 } = require("../../Controllers/cost-center/costcenter");
 const { auth, restrictTo } = require("../../middleware/authMiddleware");
 
-router.get("/:plantId", auth, getCostCentresByPlant);
-router.post("/", auth, createCostCentre);
-router.put("/:id", auth,  updateCostCentre);
-router.delete("/:id", auth, deleteCostCentre);
+router.get("/:plantId", getCostCentresByPlant);
+router.post("/",  createCostCentre);
+router.put("/:id",   updateCostCentre);
+router.delete("/:id",  deleteCostCentre);
 
 module.exports = router;

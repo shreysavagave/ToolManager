@@ -8,9 +8,9 @@ const {
 } = require("../../Controllers/plant/plantController");
 const { auth, restrictTo } = require("../../middleware/authMiddleware");
 
-router.get("/", auth, getPlants);
-router.post("/", auth , createPlant);
-router.put("/:id", auth,  updatePlant);
-router.delete("/:id", auth, deletePlant);
+router.get("/",  getPlants);
+router.post("/", createPlant);
+router.put("/:id", updatePlant);
+router.delete("/:id",  deletePlant);
 
 module.exports = router;
