@@ -34,36 +34,39 @@ const OperatorPlantPage = () => {
   );
 
   return (
-    <div className="p-6 max-w-4xl mx-auto">
-      <h1 className="text-3xl font-bold mb-6 text-blue-700">Plants</h1>
-
-      <input
-        type="text"
-        placeholder="Search plants"
-        value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
-        className="w-full border p-2 rounded mb-4"
-      />
-
-      {filteredPlants.length === 0 ? (
-        <p className="text-gray-500">No plants found.</p>
-      ) : (
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {filteredPlants.map((plant) => (
-            <div
-              key={plant._id}
-              className="bg-white p-4 rounded shadow border cursor-pointer"
-              onClick={() => handleNavigate(plant._id)}
-            >
-              <p className="font-medium text-lg text-blue-800 hover:underline">
-                {plant.name}
-              </p>
-            </div>
-          ))}
-        </div>
-      )}
+    <div className="min-h-screen bg-gray-900 text-white px-4 py-8">
+      <div className="max-w-4xl mx-auto">
+        <h1 className="text-3xl font-bold mb-6 text-blue-400 text-center">🏭 Plants</h1>
+  
+        <input
+          type="text"
+          placeholder="Search plants"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="w-full border border-gray-600 bg-gray-800 text-white p-2 rounded mb-6 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
+  
+        {filteredPlants.length === 0 ? (
+          <p className="text-gray-400 text-center">No plants found.</p>
+        ) : (
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {filteredPlants.map((plant) => (
+              <div
+                key={plant._id}
+                className="bg-white/10 backdrop-blur-md border border-white/10 rounded-xl p-4 shadow hover:shadow-lg transition cursor-pointer hover:border-blue-500"
+                onClick={() => handleNavigate(plant._id)}
+              >
+                <p className="font-medium text-lg text-white hover:underline">
+                  {plant.name}
+                </p>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   );
+  
 };
 
 export default OperatorPlantPage;

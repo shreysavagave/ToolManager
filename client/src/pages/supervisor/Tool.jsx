@@ -1,5 +1,3 @@
-// src/pages/supervisor/SupervisorToolsPage.jsx
-
 import React, { useEffect, useState } from "react";
 import axios from "../../axios";
 import { useLocation } from "react-router-dom";
@@ -8,7 +6,7 @@ import { toast } from "react-toastify";
 const SupervisorToolsPage = () => {
   const [tools, setTools] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [editing, setEditing] = useState({}); // toolId: { currentAge }
+  const [editing, setEditing] = useState({});
 
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
@@ -49,7 +47,7 @@ const SupervisorToolsPage = () => {
         currentAge: newAge,
       });
       if (res.data.success) {
-        toast.success("Tool age updated");
+        toast.success("Tool life updated");
         fetchTools();
         const updated = { ...editing };
         delete updated[toolId];
@@ -60,90 +58,89 @@ const SupervisorToolsPage = () => {
     }
   };
 
-  
-
   useEffect(() => {
     fetchTools();
   }, [costCentreId]);
 
   return (
-    <div className="p-6 max-w-4xl mx-auto">
-      <h1 className="text-3xl font-bold mb-6 text-orange-600">Tools</h1>
+    <div className="min-h-screen bg-gray-900 text-white px-4 py-8">
+      <div className="max-w-4xl mx-auto">
+        <h1 className="text-3xl font-bold mb-6 text-orange-400 text-center">🧰 Tools</h1>
 
-      {tools.length === 0 ? (
-        <p className="text-gray-500">No tools found.</p>
-      ) : (
-        <div className="grid md:grid-cols-2 gap-4">
-          {tools.map((tool) => {
-            const isEditing = editing[tool._id];
-            const fillPercent = Math.min((tool.currentAge / tool.lifeSpan) * 100, 100);
-            const fillColor = fillPercent >= 80 ? "bg-red-600" : "bg-green-600";
+        {tools.length === 0 ? (
+          <p className="text-gray-400 text-center">No tools found.</p>
+        ) : (
+          <div className="grid md:grid-cols-2 gap-5">
+            {tools.map((tool) => {
+              const isEditing = editing[tool._id];
+              const fillPercent = Math.min((tool.currentAge / tool.lifeSpan) * 100, 100);
+              const fillColor = fillPercent >= 80 ? "bg-red-600" : "bg-green-600";
 
-            return (
-              <div key={tool._id} className="bg-white p-4 rounded shadow border space-y-3">
-                <p className="font-bold text-lg">{tool.name}</p>
+              return (
+                <div key={tool._id} className="bg-white/10 backdrop-blur p-4 rounded-xl shadow border border-white/10 space-y-3">
+                  <p className="font-semibold text-lg text-white">{tool.name}</p>
 
-                <div className="w-full bg-gray-200 rounded-full h-4 overflow-hidden">
-                  <div
-                    className={`h-full ${fillColor}`}
-                    style={{ width: `${fillPercent}%` }}
-                  ></div>
-                </div>
+                  <div className="w-full bg-gray-700 rounded-full h-4 overflow-hidden">
+                    <div
+                      className={`${fillColor} h-full transition-all duration-300`}
+                      style={{ width: `${fillPercent}%` }}
+                    ></div>
+                  </div>
 
-                <p className="text-sm">Life Span: {tool.lifeSpan}</p>
-                <p className="text-sm">Current Age: {tool.currentAge}</p>
+                  <p className="text-sm text-gray-300">Life Span: {tool.lifeSpan}</p>
+                  <p className="text-sm text-gray-300">Life: {tool.currentAge}</p>
 
-                {isEditing ? (
-                  <>
-                    <input
-                      type="number"
-                      value={isEditing.currentAge}
-                      onChange={(e) =>
-                        setEditing({
-                          ...editing,
-                          [tool._id]: {
-                            currentAge: e.target.value,
-                          },
-                        })
-                      }
-                      placeholder="New Age"
-                      className="w-full border p-1 rounded"
-                    />
+                  {isEditing ? (
+                    <>
+                      <input
+                        type="number"
+                        value={isEditing.currentAge}
+                        onChange={(e) =>
+                          setEditing({
+                            ...editing,
+                            [tool._id]: {
+                              currentAge: e.target.value,
+                            },
+                          })
+                        }
+                        placeholder="New Life"
+                        className="w-full bg-gray-800 text-white border border-gray-600 p-2 rounded"
+                      />
+                      <div className="flex justify-between mt-2">
+                        <button
+                          onClick={() => handleSave(tool._id)}
+                          className="bg-orange-600 hover:bg-orange-700 text-white px-4 py-1 rounded"
+                        >
+                          Save
+                        </button>
+                        <button
+                          onClick={() => {
+                            const updated = { ...editing };
+                            delete updated[tool._id];
+                            setEditing(updated);
+                          }}
+                          className="text-gray-400 hover:text-white"
+                        >
+                          Cancel
+                        </button>
+                      </div>
+                    </>
+                  ) : (
                     <div className="flex justify-between mt-2">
                       <button
-                        onClick={() => handleSave(tool._id)}
-                        className="bg-orange-600 text-white px-4 py-1 rounded hover:bg-orange-700"
+                        onClick={() => handleEdit(tool)}
+                        className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm"
                       >
-                        Save
-                      </button>
-                      <button
-                        onClick={() => {
-                          const updated = { ...editing };
-                          delete updated[tool._id];
-                          setEditing(updated);
-                        }}
-                        className="text-gray-500 hover:text-black"
-                      >
-                        Cancel
+                        Edit Life
                       </button>
                     </div>
-                  </>
-                ) : (
-                  <div className="flex justify-between mt-2">
-                    <button
-                      onClick={() => handleEdit(tool)}
-                      className="bg-blue-600 text-white px-3 py-1 rounded text-sm hover:bg-blue-700"
-                    >
-                      Edit Age
-                    </button>
-                    
-                  </div>
-                )}
-              </div>
-            );
-          })}
-        </div>
-      )}
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        )}
+      </div>
     </div>
   );
 };

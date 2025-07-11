@@ -80,76 +80,75 @@ const DevPage = () => {
   }, []);
 
   return (
-    <div className="p-6 max-w-5xl mx-auto">
-      <h1 className="text-3xl font-bold mb-6 text-blue-700 text-center">
-        Plant Management
-      </h1>
+    <div className="min-h-screen bg-gray-900 text-white px-4 py-8">
+      <div className="max-w-5xl mx-auto">
+        <h1 className="text-3xl font-bold mb-6 text-center text-indigo-400">
+          🏭 Plant Management
+        </h1>
 
-      {/* Search bar */}
-      <div className="mb-4 w-full">
-        <input
-          type="text"
-          placeholder="Search plant..."
-          value={searchTerm}
-          onChange={handleSearch}
-          className="w-full border border-gray-300 rounded p-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
-        />
-      </div>
-
-      {/* Create plant form */}
-      <div className="flex flex-col sm:flex-row gap-2 mb-6">
-        <input
-          type="text"
-          placeholder="Enter new plant name"
-          value={newPlantName}
-          onChange={(e) => setNewPlantName(e.target.value)}
-          className="w-full sm:w-auto flex-1 border p-2 rounded"
-          onKeyDown={(e) => e.key === "Enter" && createPlant()}
-          disabled={loading}
-        />
-        <button
-          onClick={createPlant}
-          disabled={loading || !newPlantName.trim()}
-          className={`w-full sm:w-auto px-4 py-2 rounded text-white font-medium ${
-            loading || !newPlantName.trim()
-              ? "bg-gray-400 cursor-not-allowed"
-              : "bg-blue-600 hover:bg-blue-700"
-          }`}
-        >
-          {loading ? "Adding..." : "Add Plant"}
-        </button>
-      </div>
-
-      {/* Plant cards */}
-      {filteredPlants.length === 0 ? (
-        <p className="text-gray-500">No plants found.</p>
-      ) : (
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {filteredPlants.map((plant) => (
-            <div
-              key={plant._id}
-              className="bg-white p-4 rounded shadow-md border hover:shadow-lg transition duration-200"
-            >
-              <div
-                className="cursor-pointer"
-                onClick={() => handleNavigate(plant._id)}
-              >
-                <p className="font-semibold text-lg text-blue-800 hover:underline">
-                  {plant.name}
-                </p>
-              </div>
-              <div className="flex justify-end mt-4">
-                <button
-                  onClick={() => deletePlant(plant._id)}
-                  className="text-sm bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded"
-                >
-                  Delete
-                </button>
-              </div>
-            </div>
-          ))}
+        {/* Search */}
+        <div className="mb-6">
+          <input
+            type="text"
+            placeholder="Search plant..."
+            value={searchTerm}
+            onChange={handleSearch}
+            className="w-full bg-gray-800 border border-gray-700 text-white rounded px-4 py-2 focus:ring-2 focus:ring-indigo-500 outline-none"
+          />
         </div>
-      )}
+
+        {/* Create */}
+        <div className="flex flex-col sm:flex-row gap-3 mb-8">
+          <input
+            type="text"
+            placeholder="Enter new plant name"
+            value={newPlantName}
+            onChange={(e) => setNewPlantName(e.target.value)}
+            onKeyDown={(e) => e.key === "Enter" && createPlant()}
+            disabled={loading}
+            className="flex-1 bg-gray-800 border border-gray-700 text-white rounded px-4 py-2 focus:ring-2 focus:ring-indigo-500 outline-none"
+          />
+          <button
+            onClick={createPlant}
+            disabled={loading || !newPlantName.trim()}
+            className={`px-4 py-2 rounded font-semibold transition ${
+              loading || !newPlantName.trim()
+                ? "bg-gray-500 cursor-not-allowed"
+                : "bg-indigo-600 hover:bg-indigo-700"
+            }`}
+          >
+            {loading ? "Adding..." : "Add Plant"}
+          </button>
+        </div>
+
+        {/* Plant List */}
+        {filteredPlants.length === 0 ? (
+          <p className="text-gray-400 text-center">No plants found.</p>
+        ) : (
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {filteredPlants.map((plant) => (
+              <div
+                key={plant._id}
+                className="bg-white/10 backdrop-blur-sm border border-white/20 text-white rounded-xl p-5 shadow-md hover:shadow-lg transition cursor-pointer"
+              >
+                <div onClick={() => handleNavigate(plant._id)}>
+                  <h2 className="text-lg font-semibold text-indigo-300 hover:underline">
+                    {plant.name}
+                  </h2>
+                </div>
+                <div className="flex justify-end mt-4">
+                  <button
+                    onClick={() => deletePlant(plant._id)}
+                    className="text-sm bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded"
+                  >
+                    Delete
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   );
 };

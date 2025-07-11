@@ -53,11 +53,11 @@ function App() {
 
       <Routes>
 
-      <Route path="/" element={<AuthLogin />} />
+      {/* <Route path="/" element={<AuthLogin />} /> */}
 
 
         {/* Auth Routes */}
-        <Route path="/auth" element={
+        <Route path="/" element={
           <CheckAuth isAuthenticated={isAuthenticated} user={user}>
             <AuthLayout />
           </CheckAuth>

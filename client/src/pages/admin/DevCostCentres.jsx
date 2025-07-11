@@ -96,74 +96,79 @@ const CostCentresPage = () => {
   }, [plantId]);
 
   return (
-    <div className="p-6 max-w-5xl mx-auto">
-      <h1 className="text-3xl font-bold mb-6 text-green-700 text-center">
-        Cost Centres
-      </h1>
-
-      {/* Search bar */}
-      <div className="mb-4">
-        <input
-          type="text"
-          placeholder="Search cost centre..."
-          value={searchTerm}
-          onChange={handleSearch}
-          className="w-full border border-gray-300 rounded p-2 focus:outline-none focus:ring-2 focus:ring-green-400"
-        />
-      </div>
-
-      {/* Add cost centre */}
-      <div className="flex flex-col sm:flex-row gap-2 mb-6">
-        <input
-          type="text"
-          placeholder="Enter new cost centre name"
-          value={newCostCentre}
-          onChange={(e) => setNewCostCentre(e.target.value)}
-          className="w-full sm:w-auto flex-1 border p-2 rounded"
-          onKeyDown={(e) => e.key === "Enter" && createCostCentre()}
-          disabled={loading}
-        />
-        <button
-          onClick={createCostCentre}
-          disabled={loading || !newCostCentre.trim()}
-          className={`w-full sm:w-auto px-4 py-2 rounded text-white font-medium ${
-            loading || !newCostCentre.trim()
-              ? "bg-gray-400 cursor-not-allowed"
-              : "bg-green-600 hover:bg-green-700"
-          }`}
-        >
-          {loading ? "Adding..." : "Add Cost Centre"}
-        </button>
-      </div>
-
-      {/* Display cost centres */}
-      {filteredCentres.length === 0 ? (
-        <p className="text-gray-500">No cost centres found for this plant.</p>
-      ) : (
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {filteredCentres.map((cc) => (
-            <div
-              key={cc._id}
-              className="bg-white p-4 rounded shadow border flex flex-col justify-between hover:shadow-lg transition"
-            >
-              <p
-                onClick={() => handleNavigate(cc._id)}
-                className="font-medium text-lg text-green-700 cursor-pointer hover:underline"
-              >
-                {cc.name}
-              </p>
-              <button
-                onClick={() => deleteCostCentre(cc._id)}
-                className="mt-4 text-sm bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded self-end"
-              >
-                Delete
-              </button>
-            </div>
-          ))}
+    <div className="min-h-screen bg-gray-900 text-white px-4 py-8">
+      <div className="max-w-5xl mx-auto">
+        <h1 className="text-3xl font-bold mb-6 text-center text-green-400">
+          🧭 Cost Centres
+        </h1>
+  
+        {/* Search */}
+        <div className="mb-4">
+          <input
+            type="text"
+            placeholder="Search cost centre..."
+            value={searchTerm}
+            onChange={handleSearch}
+            className="w-full bg-gray-800 border border-gray-700 text-white rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
+          />
         </div>
-      )}
+  
+        {/* Add cost centre */}
+        <div className="flex flex-col sm:flex-row gap-3 mb-6">
+          <input
+            type="text"
+            placeholder="Enter new cost centre name"
+            value={newCostCentre}
+            onChange={(e) => setNewCostCentre(e.target.value)}
+            onKeyDown={(e) => e.key === "Enter" && createCostCentre()}
+            disabled={loading}
+            className="flex-1 bg-gray-800 border border-gray-700 text-white rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
+          />
+          <button
+            onClick={createCostCentre}
+            disabled={loading || !newCostCentre.trim()}
+            className={`px-4 py-2 rounded font-semibold transition ${
+              loading || !newCostCentre.trim()
+                ? "bg-gray-500 cursor-not-allowed"
+                : "bg-green-600 hover:bg-green-700"
+            }`}
+          >
+            {loading ? "Adding..." : "Add Cost Centre"}
+          </button>
+        </div>
+  
+        {/* Display */}
+        {filteredCentres.length === 0 ? (
+          <p className="text-gray-400 text-center">No cost centres found for this plant.</p>
+        ) : (
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
+            {filteredCentres.map((cc) => (
+              <div
+                key={cc._id}
+                className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-lg p-4 hover:shadow-lg transition cursor-pointer"
+              >
+                <p
+                  onClick={() => handleNavigate(cc._id)}
+                  className="font-medium text-lg text-green-300 hover:underline"
+                >
+                  {cc.name}
+                </p>
+                <div className="flex justify-end mt-4">
+                  <button
+                    onClick={() => deleteCostCentre(cc._id)}
+                    className="text-sm bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded"
+                  >
+                    Delete
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   );
+  
 };
 
 export default CostCentresPage;

@@ -67,45 +67,49 @@ const OperatorToolsPage = () => {
   }, [costCentreId]);
 
   return (
-    <div className="p-6 max-w-4xl mx-auto">
-      <h1 className="text-3xl font-bold mb-6 text-indigo-700">Tool Management</h1>
-
+    <div className="p-6 max-w-4xl mx-auto text-white">
+      <h1 className="text-3xl font-bold mb-6 text-indigo-400">Tool Management</h1>
+  
       {tools.length === 0 ? (
-        <p className="text-gray-500">No tools found.</p>
+        <p className="text-gray-400">No tools found.</p>
       ) : (
         <div className="grid md:grid-cols-2 gap-4">
           {tools.map((tool) => {
             const percent = Math.min((tool.currentAge / tool.lifeSpan) * 100, 100);
-            const barColor = percent < 70 ? "bg-green-500" : percent < 90 ? "bg-yellow-500" : "bg-red-500";
-
+            const barColor =
+              percent < 70 ? "bg-green-500" : percent < 90 ? "bg-yellow-400" : "bg-red-500";
+  
             return (
-              <div key={tool._id} className="bg-white p-4 rounded shadow border space-y-2">
-                <p className="font-medium text-lg">{tool.name}</p>
-                <p className="text-sm text-gray-600">Life Span: {tool.lifeSpan}</p>
-                <p className="text-sm text-gray-600">Current Age: {tool.currentAge}</p>
-
-                <div className="w-full bg-gray-300 h-3 rounded">
+              <div
+                key={tool._id}
+                className="bg-gray-800 p-4 rounded shadow border border-gray-700 space-y-2"
+              >
+                <p className="font-semibold text-lg text-indigo-300">{tool.name}</p>
+                <p className="text-sm text-gray-300">Life Span: {tool.lifeSpan}</p>
+                <p className="text-sm text-gray-300">Life: {tool.currentAge}</p>
+  
+                <div className="w-full bg-gray-600 h-3 rounded">
                   <div
                     className={`${barColor} h-3 rounded`}
                     style={{ width: `${percent}%` }}
                   ></div>
                 </div>
-
+  
                 <div className="flex gap-2 mt-2">
                   <input
                     type="number"
-                    placeholder="New Age"
+                    placeholder="New Life"
                     value={editingAge[tool._id] || ""}
                     onChange={(e) =>
                       setEditingAge({ ...editingAge, [tool._id]: e.target.value })
                     }
-                    className="border p-1 rounded w-20"
+                    className="border border-gray-600 bg-gray-900 text-white p-1 rounded w-24 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                   />
                   <button
                     onClick={() => updateToolAge(tool._id)}
                     className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm"
                   >
-                    Update Age
+                    Update Life
                   </button>
                 </div>
               </div>
@@ -115,6 +119,7 @@ const OperatorToolsPage = () => {
       )}
     </div>
   );
+  
 };
 
 export default OperatorToolsPage;

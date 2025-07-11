@@ -39,36 +39,35 @@ const OperatorCostCentrePage = () => {
   };
 
   return (
-    <div className="p-6 max-w-4xl mx-auto">
-      <h1 className="text-3xl font-bold mb-6 text-green-700">Cost Centres</h1>
-
+    <div className="p-6 max-w-4xl mx-auto text-white">
+      <h1 className="text-3xl font-bold mb-6 text-center text-green-400">🏭 Cost Centres</h1>
+  
       <input
         type="text"
         placeholder="Search cost centres"
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
-        className="w-full  border p-2 rounded mb-4"
+        className="w-full bg-gray-800 text-white border border-gray-600 p-2 rounded mb-4 focus:outline-none focus:ring-2 focus:ring-green-500"
       />
-
+  
       {filteredCentres.length === 0 ? (
-        <p className="text-gray-500">No cost centres found.</p>
+        <p className="text-gray-400">No cost centres found.</p>
       ) : (
         <div className="grid md:grid-cols-2 gap-4">
           {filteredCentres.map((cc) => (
             <div
               key={cc._id}
-              className="bg-white p-4 rounded shadow border flex justify-between items-center cursor-pointer"
+              className="bg-gray-800 p-4 rounded shadow border border-gray-700 flex justify-between items-center cursor-pointer hover:bg-gray-700 transition"
               onClick={() => handleNavigate(cc._id)}
             >
-              <p className="font-medium text-blue-700 hover:underline">
-                {cc.name}
-              </p>
+              <p className="font-medium text-green-300 hover:underline">{cc.name}</p>
             </div>
           ))}
         </div>
       )}
     </div>
   );
+  
 };
 
 export default OperatorCostCentrePage;
