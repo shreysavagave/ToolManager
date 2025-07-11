@@ -1,16 +1,18 @@
 const express = require("express");
 const router = express.Router();
+
 const {
   getPlants,
   createPlant,
   updatePlant,
   deletePlant,
 } = require("../../Controllers/plant/plantController");
-const { auth, restrictTo } = require("../../middleware/authMiddleware");
 
-router.get("/",  getPlants);
-router.post("/", createPlant);
-router.put("/:id", updatePlant);
-router.delete("/:id",  deletePlant);
+const authMiddleware = require("../../middleware/authMiddleware");
+
+router.get("/", authMiddleware,getPlants);
+router.post("/",authMiddleware, createPlant);
+router.put("/:id",authMiddleware, updatePlant);
+router.delete("/:id",authMiddleware,  deletePlant);
 
 module.exports = router;
