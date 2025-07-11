@@ -8,27 +8,41 @@ const costCenterRoutes = require("./routes/plant/costcenter-routes");
 const toolRoutes = require("./routes/plant/tool-routes");
 const checkToolLifeAndNotify = require('./Controllers/emails/notification');
 require('dotenv').config()
-
-
-mongoose.connect(process.env.MONGO_URI)
-.then(()=>console.log("MongoDb connected"))
-.catch((error)=>{console.log(error)});
-
-console.log(process.env.SECRET_KEY) 
-const app = express()
-const PORT = process.env.PORT;
 const cron = require("node-cron");
 
-app.use(cookieParser());
+const app = express();
+const PORT = process.env.PORT;
 
+// ✅ Use CORS once at the top with correct config
 app.use(cors({
-  origin:'https://tool-manager-l7rs.vercel.app/', // Your frontend origin
-  credentials: true,               // ✅ allow cookies
+  origin: "https://tool-manager-l7rs.vercel.app", // ✅ No trailing slash
+  methods: ['GET', 'POST', 'DELETE', 'PUT'],
+  allowedHeaders: [
+    "Content-Type",
+    "Authorization",
+    "Cache-Control",
+    "Expires",
+    "Pragma"
+  ],
+  credentials: true
 }));
 
+app.use(cookieParser());
+app.use(express.json());
 
+mongoose.connect(process.env.MONGO_URI)
+  .then(() => console.log("MongoDb connected"))
+  .catch((error) => console.log(error));
 
-// Run every day at 9 AM
+console.log(process.env.SECRET_KEY);
+
+// 🔁 Routes
+app.use('/api/auth', authRouter);
+app.use("/api/plants", plantRoutes);
+app.use("/api/costcentres", costCenterRoutes);
+app.use("/api/tools", toolRoutes);
+
+// 🔁 Cron & Test route
 cron.schedule("0 9 * * *", () => {
   console.log("Running tool life check...");
   checkToolLifeAndNotify();
@@ -44,30 +58,6 @@ app.get("/test-tool-life-email", async (req, res) => {
   }
 });
 
-
-
-
-
-app.use(
-  cors({
-    origin:process.env.FRONTEND_URL,
-    methods:['POST','GET','DELETE','PUT'],
-    allowedHeaders:[
-      "Content-Type",
-      "Authorization",
-      "Cache-Control",
-      "Expires",
-      "Pragma"
-    ],
-    credentials:true
-  })
-);
-
-app.use(express.json());
-app.use('/api/auth', authRouter)
-app.use("/api/plants", plantRoutes);
-app.use("/api/costcentres", costCenterRoutes);
-app.use("/api/tools", toolRoutes);
-app.listen(PORT,()=>{
-  console.log(`running on port ${PORT}`)
-})
+app.listen(PORT, () => {
+  console.log(`Running on port ${PORT}`);
+});
