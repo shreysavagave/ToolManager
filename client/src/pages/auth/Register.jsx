@@ -100,9 +100,9 @@ const AuthRegister = () => {
         </form>
 
         <p className="text-sm text-center mt-6 text-gray-400">
-          Already have an account?{" "}
-          <Link to="/login" className="text-indigo-400 hover:underline font-medium">
-            Login
+          Go to Home Page{" "}
+          <Link to="/dev-eng/Home" className="text-indigo-400 hover:underline font-medium">
+            Home 
           </Link>
         </p>
       </div>

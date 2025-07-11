@@ -13,7 +13,7 @@ export const registerUser = createAsyncThunk(
   '/Auth/register',
   async (formData, { rejectWithValue }) => {
     try {
-      const response = await axios.post('http://localhost:5000/api/auth/register', formData, {
+      const response = await axios.post(`${import.meta.env.VITE_BACKEND}/api/auth/register`, formData, {
         withCredentials: true,
       });
       return response.data;
@@ -28,7 +28,7 @@ export const loginUser = createAsyncThunk(
   '/Auth/login',
   async (formData, { rejectWithValue }) => {
     try {
-      const response = await axios.post('http://localhost:5000/api/auth/login', formData, {
+      const response = await axios.post(`${import.meta.env.VITE_BACKEND}/api/auth/login`, formData, {
         withCredentials: true,
       });
       return response.data;
@@ -43,7 +43,7 @@ export const checkAuth = createAsyncThunk(
   '/Auth/check-auth',
   async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/auth/check-auth', {
+      const response = await axios.get(`${import.meta.env.VITE_BACKEND}/api/auth/check-auth`, {
         withCredentials: true,
       });
       console.log(response.data);
@@ -58,7 +58,7 @@ export const logoutUserAsync = createAsyncThunk(
   '/Auth/logout',
   async (_, { rejectWithValue }) => {
     try {
-      const response = await axios.post('http://localhost:5000/api/auth/logout', {}, {
+      const response = await axios.post(`${import.meta.env.VITE_BACKEND}/api/auth/logout`, {}, {
         withCredentials: true,
       });
       return response.data;

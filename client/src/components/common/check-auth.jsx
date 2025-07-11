@@ -8,6 +8,10 @@ function CheckAuth({ isAuthenticated, user, children }) {
   if (!isAuthenticated && !path.includes('/login')) {
     return <Navigate to="/login" />;
   }
+  
+  if (isAuthenticated && user?.role==='admin' && path.includes('/login')) {
+    return <Navigate to="/dev-eng/Home" />;
+  }
 
   // Restrict register page access to only admin
   if (path.includes('/register')) {
