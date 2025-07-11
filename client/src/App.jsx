@@ -1,14 +1,12 @@
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Routes, Route } from 'react-router-dom';
-import AuthLayout from './components/auth/layout';
+import AuthLayout from './components/auth/Layout';
 import AuthLogin from './pages/auth/Login';
 import AuthRegister from './pages/auth/Register';
 import DevEngLayout from './components/dev-eng/Layout';
 import SupervisorLayout from './components/supervisor/Layout';
-import SupervisorDashboard from './pages/supervisor/plant';
 import OperatorLayout from './components/operator/Layout';
-import OperatorDashboard from './pages/operator/Plant';
 import ShopLayout from './components/shop/Layout';
 import ShopHome from './pages/shop/home';
 import ShopListing from './pages/shop/listing';
@@ -28,8 +26,7 @@ import SupervisorToolsPage from './pages/supervisor/Tool';
 import OperatorPlantPage from './pages/operator/Plant';
 import OperatorCostCentrePage from './pages/operator/costCentre';
 import OperatorToolsPage from './pages/operator/tool';
-import RedirectByRole from './pages/redirect';
-import SupervisorToolsPagenew from './pages/supervisor/newTool';
+
 
 function App() {
   const dispatch = useDispatch();

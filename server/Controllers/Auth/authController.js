@@ -69,7 +69,7 @@ const LoginUser = async (req, res) => {
 
     const token = jwt.sign({
       id: checkUser._id, role: checkUser.role, email: checkUser.email
-    }, "secretkey")
+    }, process.env.SECRET_KEY)
 
     res.cookie("token", token, {
       httpOnly: true,
@@ -111,7 +111,7 @@ const authMiddleware = async (req, res, next) => {
   })
 
   try {
-    const decoded = jwt.verify(token, "secretkey");
+    const decoded = jwt.verify(token, process.env.SECRET_KEY);
     req.user = decoded;
     next()
   }

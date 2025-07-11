@@ -10,19 +10,19 @@ const checkToolLifeAndNotify = require('./Controllers/emails/notification');
 require('dotenv').config()
 
 
-mongoose.connect("mongodb+srv://shreysavagave:MechProject@cluster0.dxmcu9a.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
+mongoose.connect(process.env.MONGO_URI)
 .then(()=>console.log("MongoDb connected"))
 .catch((error)=>{console.log(error)});
 
 console.log(process.env.SECRET_KEY) 
 const app = express()
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT;
 const cron = require("node-cron");
 
 app.use(cookieParser());
 
 app.use(cors({
-  origin: 'http://localhost:5173', // Your frontend origin
+  origin: process.env.FRONTEND_URL, // Your frontend origin
   credentials: true,               // ✅ allow cookies
 }));
 
@@ -50,7 +50,7 @@ app.get("/test-tool-life-email", async (req, res) => {
 
 app.use(
   cors({
-    origin:'http://localhost:5173',
+    origin:process.env.FRONTEND_URL,
     methods:['POST','GET','DELETE','PUT'],
     allowedHeaders:[
       "Content-Type",
