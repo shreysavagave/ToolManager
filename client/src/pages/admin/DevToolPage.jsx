@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "../../axios";
 import { toast } from "react-toastify";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const DevToolsPage = () => {
   const [tools, setTools] = useState([]);
@@ -14,6 +14,7 @@ const DevToolsPage = () => {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const costCentreId = queryParams.get("costCentreId");
+  const navigate = useNavigate();
 
   const fetchTools = async () => {
     if (!costCentreId) return toast.error("Cost Centre ID not found");
@@ -45,6 +46,8 @@ const DevToolsPage = () => {
         lifeSpan: parseInt(lifeSpan),
         currentAge: 0,
         costCentreId,
+      }, {
+        withCredentials: true // 🔑 this sends the JWT cookie
       });
 
       if (res.data.success) {
@@ -113,9 +116,14 @@ const DevToolsPage = () => {
     return "bg-red-500";
   };
 
+  
   useEffect(() => {
     fetchTools();
   }, [costCentreId]);
+  
+  const handleHistoryClick = (toolId) => {
+    navigate(`/dev-eng/tool-history/${toolId}`);
+  };
 
   return (
     <div className="min-h-screen bg-gray-900 text-white px-4 py-8">
@@ -123,7 +131,7 @@ const DevToolsPage = () => {
         <h1 className="text-3xl font-bold mb-6 text-center text-purple-400">
           🛠️ Tools Management
         </h1>
-  
+
         {/* Add Tool */}
         <div className="flex flex-col md:flex-row gap-3 mb-6">
           <input
@@ -131,7 +139,7 @@ const DevToolsPage = () => {
             placeholder="Tool Name"
             value={toolName}
             onChange={(e) => setToolName(e.target.value)}
-            className="flex-1 bg-gray-800 border border-gray-700 text-white rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500"
+            className="w-full bg-gray-800 border border-gray-700 text-white rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500"
             disabled={loading}
           />
           <input
@@ -139,7 +147,7 @@ const DevToolsPage = () => {
             placeholder="Tool Life Span"
             value={lifeSpan}
             onChange={(e) => setLifeSpan(e.target.value)}
-            className="flex-1 bg-gray-800 border border-gray-700 text-white rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500"
+            className="w-full bg-gray-800 border border-gray-700 text-white rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500"
             disabled={loading}
           />
           <button
@@ -154,7 +162,7 @@ const DevToolsPage = () => {
             {loading ? "Adding..." : "Add Tool"}
           </button>
         </div>
-  
+
         {/* Tool List */}
         {tools.length === 0 ? (
           <p className="text-gray-400 text-center">No tools found.</p>
@@ -166,26 +174,29 @@ const DevToolsPage = () => {
                 100
               );
               const barColor = getBarColor(percentUsed);
-  
+
               return (
                 <div
                   key={tool._id}
                   className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl p-4 space-y-2 shadow hover:shadow-lg transition"
                 >
-                  <p className="font-semibold text-lg text-purple-300">{tool.name}</p>
+                  <p className="font-semibold text-lg text-purple-300">
+                    {tool.name}
+                  </p>
                   <div className="text-sm text-gray-300">
                     Life Span: {tool.lifeSpan} | Current Age: {tool.currentAge}
                   </div>
-  
+
                   <div className="w-full bg-gray-700 h-4 rounded overflow-hidden">
                     <div
                       className={`${barColor} h-full`}
                       style={{ width: `${percentUsed}%` }}
                     ></div>
                   </div>
-  
+
                   {editToolId === tool._id ? (
                     <div className="flex flex-col gap-2 mt-2">
+                      {/* Input Fields */}
                       <input
                         type="text"
                         placeholder="Edit Tool Name"
@@ -222,7 +233,8 @@ const DevToolsPage = () => {
                         }
                         className="bg-gray-800 border border-gray-600 text-white p-2 rounded"
                       />
-                      <div className="flex gap-2">
+                      {/* Save Cancel */}
+                      <div className="flex flex-wrap gap-2">
                         <button
                           onClick={() => updateTool(tool._id)}
                           className="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded"
@@ -245,7 +257,7 @@ const DevToolsPage = () => {
                       </div>
                     </div>
                   ) : (
-                    <div className="flex gap-2 mt-2">
+                    <div className="flex flex-wrap gap-2 mt-2">
                       <button
                         onClick={() => {
                           setEditToolId(tool._id);
@@ -265,6 +277,12 @@ const DevToolsPage = () => {
                       >
                         Delete
                       </button>
+                      <button
+                        onClick={() => handleHistoryClick(tool._id)}
+                        className="bg-yellow-500 hover:bg-yellow-600 text-black font-semibold px-3 py-1 rounded text-sm"
+                      >
+                        History
+                      </button>
                     </div>
                   )}
                 </div>
@@ -275,7 +293,7 @@ const DevToolsPage = () => {
       </div>
     </div>
   );
-  
 };
 
 export default DevToolsPage;
+

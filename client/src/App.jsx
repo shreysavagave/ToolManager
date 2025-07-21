@@ -26,6 +26,7 @@ import SupervisorToolsPage from './pages/supervisor/Tool';
 import OperatorPlantPage from './pages/operator/Plant';
 import OperatorCostCentrePage from './pages/operator/costCentre';
 import OperatorToolsPage from './pages/operator/tool';
+import ToolHistoryPage from './pages/ToolHistory/toolhistory';
 
 
 function App() {
@@ -72,6 +73,7 @@ function App() {
           <Route path="Home" element={<DevPage />} />
           <Route path="costcentres" element={<CostCentrePage />} />
           <Route path="tools" element={<DevToolsPage />} />
+          <Route path="tool-history/:id" element={<ToolHistoryPage />} />
 
         </Route>
 
@@ -85,6 +87,7 @@ function App() {
           <Route path="costcentres" element={<SupervisorCostCentrePage />} />
           {/* <Route path="tools" element={<SupervisorToolsPage />} /> */}
           <Route path="tools" element={<SupervisorToolsPage />} />
+          <Route path="tool-history/:id" element={<ToolHistoryPage />} />
         </Route>
 
         {/* Operator Routes */}
@@ -96,6 +99,7 @@ function App() {
           <Route path="Home" element={<OperatorPlantPage />} />
           <Route path="costcentres" element={<OperatorCostCentrePage />} />
           <Route path="tools" element={<OperatorToolsPage />} />
+          <Route path="tool-history/:id" element={<ToolHistoryPage />} />
         </Route>
 
         {/* Shop Routes */}

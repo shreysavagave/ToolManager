@@ -14,8 +14,20 @@ const app = express();
 const PORT = process.env.PORT;
 
 // ✅ Use CORS once at the top with correct config
+const allowedOrigins = [
+  "https://tool-manager-l7rs.vercel.app",
+  "http://localhost:5173"
+];
+
 app.use(cors({
-  origin: "https://tool-manager-l7rs.vercel.app", // ✅ No trailing slash
+  origin: function (origin, callback) {
+    // Allow requests with no origin (like mobile apps or curl)
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
   methods: ['GET', 'POST', 'DELETE', 'PUT'],
   allowedHeaders: [
     "Content-Type",

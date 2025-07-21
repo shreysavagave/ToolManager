@@ -18,7 +18,7 @@ const DevPage = () => {
       if (res.data.success) {
         setPlants(res.data.data);
         setFilteredPlants(res.data.data);
-      } else {
+      }else {
         toast.error(res.data.error || "Failed to load plants");
       }
     } catch (err) {

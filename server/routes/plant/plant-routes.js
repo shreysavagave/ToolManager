@@ -8,11 +8,11 @@ const {
   deletePlant,
 } = require("../../Controllers/plant/plantController");
 
-const authMiddleware = require("../../middleware/authMiddleware");
+const { authMiddleware } = require("../../Controllers/Auth/authController");
 
 router.get("/", getPlants);
-router.post("/", createPlant);
-router.put("/:id",updatePlant);
-router.delete("/:id",  deletePlant);
+router.post("/", authMiddleware,createPlant);
+router.put("/:id",authMiddleware,updatePlant);
+router.delete("/:id", authMiddleware, deletePlant);
 
 module.exports = router;

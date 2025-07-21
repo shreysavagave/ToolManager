@@ -2,13 +2,11 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/User'); // Adjust the path to your actual User model
 
 const authMiddleware = async (req, res, next) => {
-  const authHeader = req.headers.authorization;
+  const token = req.cookies.token;
 
-  if (!authHeader || !authHeader.startsWith('Bearer ')) {
-    return res.status(401).json({ success: false, error: 'No token provided' });
+  if (!token) {
+    return res.status(401).json({ success: false, error: 'No token provided in cookies' });
   }
-
-  const token = authHeader.split(' ')[1];
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET); // make sure JWT_SECRET is in your .env

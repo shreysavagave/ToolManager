@@ -1,15 +1,15 @@
-// src/pages/operator/ToolsPage.jsx
 import React, { useEffect, useState } from "react";
 import axios from "../../axios";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
 const OperatorToolsPage = () => {
   const [tools, setTools] = useState([]);
   const [loading, setLoading] = useState(false);
   const [editingAge, setEditingAge] = useState({});
-
   const location = useLocation();
+  const navigate = useNavigate();
+
   const queryParams = new URLSearchParams(location.search);
   const costCentreId = queryParams.get("costCentreId");
 
@@ -32,25 +32,23 @@ const OperatorToolsPage = () => {
   };
 
   const updateToolAge = async (id) => {
-    const newAge = editingAge[id];
-    if (!newAge || isNaN(newAge)) {
-      return toast.error("Please enter a valid number");
+    const addedAge = parseInt(editingAge[id]);
+    if (isNaN(addedAge) || addedAge <= 0) {
+      return toast.error("Please enter a valid number greater than 0");
     }
-  
+
     const tool = tools.find((t) => t._id === id);
     if (!tool) return toast.error("Tool not found");
-  
-    if (parseInt(newAge) < tool.currentAge) {
-      return toast.error("Age cannot be decreased");
-    }
-  
+
+    const newAge = tool.currentAge + addedAge;
+
     try {
       const res = await axios.put(`/api/tools/${id}`, {
-        currentAge: parseInt(newAge),
+        currentAge: newAge,
       });
-  
+
       if (res.data.success) {
-        toast.success("Tool age updated");
+        toast.success("Tool life updated");
         setEditingAge({ ...editingAge, [id]: "" });
         fetchTools();
       } else {
@@ -60,56 +58,72 @@ const OperatorToolsPage = () => {
       toast.error(err.response?.data?.error || "Error updating age");
     }
   };
-  
 
   useEffect(() => {
     fetchTools();
   }, [costCentreId]);
 
+  const handleHistoryClick = (toolId) => {
+    navigate(`/operator/tool-history/${toolId}`);
+  };
+
   return (
-    <div className="p-6 max-w-4xl mx-auto text-white">
-      <h1 className="text-3xl font-bold mb-6 text-indigo-400">Tool Management</h1>
-  
-      {tools.length === 0 ? (
-        <p className="text-gray-400">No tools found.</p>
+    <div className="p-4 max-w-5xl mx-auto text-white">
+      <h1 className="text-2xl md:text-3xl font-bold mb-6 text-indigo-400 text-center">
+        Tool Management
+      </h1>
+
+      {loading ? (
+        <p className="text-center text-gray-400">Loading...</p>
+      ) : tools.length === 0 ? (
+        <p className="text-gray-400 text-center">No tools found.</p>
       ) : (
-        <div className="grid md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {tools.map((tool) => {
             const percent = Math.min((tool.currentAge / tool.lifeSpan) * 100, 100);
             const barColor =
               percent < 70 ? "bg-green-500" : percent < 90 ? "bg-yellow-400" : "bg-red-500";
-  
+
             return (
               <div
                 key={tool._id}
-                className="bg-gray-800 p-4 rounded shadow border border-gray-700 space-y-2"
+                className="bg-gray-800 p-4 rounded-xl shadow border border-gray-700 space-y-2 flex flex-col justify-between"
               >
-                <p className="font-semibold text-lg text-indigo-300">{tool.name}</p>
-                <p className="text-sm text-gray-300">Life Span: {tool.lifeSpan}</p>
-                <p className="text-sm text-gray-300">Life: {tool.currentAge}</p>
-  
-                <div className="w-full bg-gray-600 h-3 rounded">
-                  <div
-                    className={`${barColor} h-3 rounded`}
-                    style={{ width: `${percent}%` }}
-                  ></div>
+                <div>
+                  <div className="w-full break-words whitespace-normal">
+                    {tool.name}
+                  </div>
+
+
+                  <p className="text-sm text-gray-300">Life Span: {tool.lifeSpan}</p>
+                  <p className="text-sm text-gray-300">Current Life: {tool.currentAge}</p>
+
+                  <div className="w-full bg-gray-600 h-3 rounded mt-2">
+                    <div className={`${barColor} h-3 rounded`} style={{ width: `${percent}%` }}></div>
+                  </div>
                 </div>
-  
-                <div className="flex gap-2 mt-2">
+
+                <div className="flex flex-col sm:flex-row gap-2 mt-4">
                   <input
                     type="number"
-                    placeholder="New Life"
+                    placeholder="Add Life"
                     value={editingAge[tool._id] || ""}
                     onChange={(e) =>
                       setEditingAge({ ...editingAge, [tool._id]: e.target.value })
                     }
-                    className="border border-gray-600 bg-gray-900 text-white p-1 rounded w-24 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    className="border border-gray-600 bg-gray-900 text-white p-2 rounded w-full focus:outline-none focus:ring-2 focus:ring-indigo-500"
                   />
                   <button
                     onClick={() => updateToolAge(tool._id)}
-                    className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm"
+                    className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded text-sm w-full"
                   >
                     Update Life
+                  </button>
+                  <button
+                    onClick={() => handleHistoryClick(tool._id)}
+                    className="bg-gray-700 hover:bg-gray-600 text-white px-3 py-2 rounded text-sm w-full"
+                  >
+                    View History
                   </button>
                 </div>
               </div>
@@ -119,7 +133,6 @@ const OperatorToolsPage = () => {
       )}
     </div>
   );
-  
 };
 
 export default OperatorToolsPage;

@@ -7,11 +7,11 @@ const {
   updateCostCentre,
   deleteCostCentre,
 } = require("../../Controllers/cost-center/costcenter");
-const { auth, restrictTo } = require("../../middleware/authMiddleware");
+const { authMiddleware } = require("../../Controllers/Auth/authController");
 
-router.get("/:plantId", getCostCentresByPlant);
-router.post("/",  createCostCentre);
-router.put("/:id",   updateCostCentre);
-router.delete("/:id",  deleteCostCentre);
+router.get("/:plantId",getCostCentresByPlant);
+router.post("/",authMiddleware,  createCostCentre);
+router.put("/:id",authMiddleware,   updateCostCentre);
+router.delete("/:id", authMiddleware, deleteCostCentre);
 
 module.exports = router;

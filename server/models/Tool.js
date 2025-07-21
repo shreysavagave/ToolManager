@@ -1,4 +1,3 @@
-// models/Tool.js
 const mongoose = require('mongoose');
 
 const toolSchema = new mongoose.Schema({
@@ -18,13 +17,18 @@ const toolSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'CostCentre',
     required: true,
-  },notifiedSupervisor: {
+  },
+  notifiedSupervisor: {
     type: Boolean,
-    default: false
+    default: false,
   },
   notifiedDevEng: {
     type: Boolean,
-    default: false
+    default: false,
+  },
+  createdBy: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User', // Make sure 'User' matches your user model name
   }
 }, { timestamps: true });
 

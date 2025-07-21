@@ -4,7 +4,7 @@ const Tool = require('../../models/Tool');
 
 const getPlants = async (req, res) => {
   try {
-    const plants = await Plant.find().sort({ createdAt: -1 });
+    const plants = await Plant.find().sort({ createdAt: -1 }); // Fetch all, no filtering
     res.status(200).json({
       success: true,
       count: plants.length,
@@ -19,6 +19,7 @@ const getPlants = async (req, res) => {
   }
 };
 
+// POST: Create a new plant
 const createPlant = async (req, res) => {
   try {
     const { name } = req.body;
@@ -31,7 +32,8 @@ const createPlant = async (req, res) => {
     }
 
     const plant = new Plant({
-      name: name.trim()
+      name: name.trim(),
+      createdBy: req.user.id // track who created the plant
     });
 
     await plant.save();
@@ -49,6 +51,7 @@ const createPlant = async (req, res) => {
   }
 };
 
+// PUT: Update a plant
 const updatePlant = async (req, res) => {
   try {
     const { id } = req.params;
@@ -61,22 +64,20 @@ const updatePlant = async (req, res) => {
       });
     }
 
-    const updatedPlant = await Plant.findByIdAndUpdate(
-      id,
-      { name: name.trim() },
-      { new: true, runValidators: true }
-    );
-
-    if (!updatedPlant) {
+    const plant = await Plant.findOne({ _id: id, createdBy: req.user.id });
+    if (!plant) {
       return res.status(404).json({
         success: false,
-        error: `Plant not found with id ${id}`
+        error: 'Plant not found or not authorized'
       });
     }
 
+    plant.name = name.trim();
+    await plant.save();
+
     res.status(200).json({
       success: true,
-      data: updatedPlant
+      data: plant
     });
   } catch (err) {
     console.error('Error updating plant:', err);
@@ -87,32 +88,33 @@ const updatePlant = async (req, res) => {
   }
 };
 
+// DELETE: Delete plant and related data
 const deletePlant = async (req, res) => {
   const { id } = req.params;
 
   try {
-    const plant = await Plant.findById(id);
-    if (!plant) return res.status(404).json({ success: false, error: "Plant not found" });
+    const plant = await Plant.findById(id); // Removed createdBy condition
+    if (!plant) {
+      return res.status(404).json({ success: false, error: 'Plant not found' });
+    }
 
-    // 1. Get all cost centres for this plant
+    // 1. Get cost centres of the plant
     const costCentres = await CostCentre.find({ plantId: id });
+    const costCentreIds = costCentres.map(cc => cc._id.toString());
 
-    // 2. Get the costCentre IDs before deleting them
-    const costCentreIds = costCentres.map((cc) => cc._id.toString());
-
-    // 3. Delete all tools associated with these cost centres
+    // 2. Delete tools
     await Tool.deleteMany({ costCentreId: { $in: costCentreIds } });
 
-    // 4. Delete cost centres
+    // 3. Delete cost centres
     await CostCentre.deleteMany({ plantId: id });
 
-    // 5. Delete the plant
+    // 4. Delete plant
     await Plant.findByIdAndDelete(id);
 
-    res.json({ success: true, message: "Plant, cost centres, and tools deleted successfully." });
+    res.json({ success: true, message: 'Plant, cost centres, and tools deleted successfully.' });
   } catch (error) {
-    console.error("Error deleting plant and related data:", error);
-    res.status(500).json({ success: false, error: "Internal server error" });
+    console.error('Error deleting plant and related data:', error);
+    res.status(500).json({ success: false, error: 'Internal server error' });
   }
 };
 
@@ -123,5 +125,4 @@ module.exports = {
   updatePlant,
   deletePlant
 };
-
 
