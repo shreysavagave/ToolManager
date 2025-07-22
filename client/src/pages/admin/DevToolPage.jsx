@@ -131,15 +131,15 @@ const DevToolsPage = () => {
         <h1 className="text-3xl font-bold mb-6 text-center text-purple-400">
           🛠️ Tools Management
         </h1>
-
+  
         {/* Add Tool */}
-        <div className="flex flex-col md:flex-row gap-3 mb-6">
+        <div className="flex flex-col sm:flex-row sm:flex-wrap gap-3 mb-6">
           <input
             type="text"
             placeholder="Tool Name"
             value={toolName}
             onChange={(e) => setToolName(e.target.value)}
-            className="w-full bg-gray-800 border border-gray-700 text-white rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500"
+            className="flex-1 bg-gray-800 border border-gray-700 text-white rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500"
             disabled={loading}
           />
           <input
@@ -147,13 +147,13 @@ const DevToolsPage = () => {
             placeholder="Tool Life Span"
             value={lifeSpan}
             onChange={(e) => setLifeSpan(e.target.value)}
-            className="w-full bg-gray-800 border border-gray-700 text-white rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500"
+            className="flex-1 bg-gray-800 border border-gray-700 text-white rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500"
             disabled={loading}
           />
           <button
             onClick={createTool}
             disabled={loading || !toolName.trim() || !lifeSpan.trim()}
-            className={`w-full md:w-auto px-4 py-2 rounded font-semibold transition ${
+            className={`w-full sm:w-auto px-4 py-2 rounded font-semibold transition ${
               loading || !toolName.trim() || !lifeSpan.trim()
                 ? "bg-gray-500 cursor-not-allowed"
                 : "bg-purple-600 hover:bg-purple-700"
@@ -162,19 +162,19 @@ const DevToolsPage = () => {
             {loading ? "Adding..." : "Add Tool"}
           </button>
         </div>
-
+  
         {/* Tool List */}
         {tools.length === 0 ? (
           <p className="text-gray-400 text-center">No tools found.</p>
         ) : (
-          <div className="grid md:grid-cols-2 gap-5">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
             {tools.map((tool) => {
               const percentUsed = Math.min(
                 (tool.currentAge / tool.lifeSpan) * 100,
                 100
               );
               const barColor = getBarColor(percentUsed);
-
+  
               return (
                 <div
                   key={tool._id}
@@ -186,17 +186,16 @@ const DevToolsPage = () => {
                   <div className="text-sm text-gray-300">
                     Life Span: {tool.lifeSpan} | Current Age: {tool.currentAge}
                   </div>
-
+  
                   <div className="w-full bg-gray-700 h-4 rounded overflow-hidden">
                     <div
                       className={`${barColor} h-full`}
                       style={{ width: `${percentUsed}%` }}
                     ></div>
                   </div>
-
+  
                   {editToolId === tool._id ? (
                     <div className="flex flex-col gap-2 mt-2">
-                      {/* Input Fields */}
                       <input
                         type="text"
                         placeholder="Edit Tool Name"
@@ -233,7 +232,6 @@ const DevToolsPage = () => {
                         }
                         className="bg-gray-800 border border-gray-600 text-white p-2 rounded"
                       />
-                      {/* Save Cancel */}
                       <div className="flex flex-wrap gap-2">
                         <button
                           onClick={() => updateTool(tool._id)}
@@ -293,7 +291,7 @@ const DevToolsPage = () => {
       </div>
     </div>
   );
-};
+          };  
 
 export default DevToolsPage;
 
