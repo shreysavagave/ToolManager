@@ -74,7 +74,7 @@ const LoginUser = async (req, res) => {
     res.cookie("token", token, {
       httpOnly: true,
       secure: false,         // Set to true only in production with HTTPS
-      sameSite: "Lax",       // Use "None" if frontend/backend are on different origins with HTTPS
+      sameSite: "None",       // Use "None" if frontend/backend are on different origins with HTTPS
       maxAge: 1000 * 60 * 60 * 24,
     }).json({
       success: true,
